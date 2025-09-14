@@ -1,0 +1,170 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width,initial-scale=1" />
+<title>I ♥ You</title>
+<style>
+  :root{
+    --bg1: #0f172a;
+    --bg2: #0b3b3b;
+    --card-bg: rgba(255,255,255,0.06);
+    --accent: #ff6b81;
+  }
+  html,body{height:100%;margin:0;font-family:system-ui,Segoe UI,Roboto,"Helvetica Neue",Arial;}
+  body{
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    background: linear-gradient(120deg,var(--bg1),var(--bg2));
+    overflow:hidden;
+  }
+
+  .bg-anim{
+    position:fixed; inset:0; z-index:0;
+    background: linear-gradient(90deg, #2b2d42 0%, #ef233c 50%, #3a0ca3 100%);
+    background-size: 400% 400%;
+    filter: blur(30px) saturate(120%);
+    opacity:0.28;
+    animation: bgShift 14s ease-in-out infinite;
+  }
+  @keyframes bgShift {
+    0%{background-position:0% 50%}
+    50%{background-position:100% 50%}
+    100%{background-position:0% 50%}
+  }
+
+  .card{
+    position:relative;
+    z-index:1;
+    width:min(720px, 92vw);
+    padding:36px;
+    border-radius:18px;
+    background:var(--card-bg);
+    box-shadow: 0 10px 30px rgba(2,6,23,0.6);
+    color:#fff;
+    text-align:center;
+    overflow:hidden;
+  }
+
+  h1{
+    margin:6px 0 10px 0;
+    font-size:36px;
+    letter-spacing:1px;
+  }
+  .message{
+    font-size:22px;
+    line-height:1.4;
+    min-height:70px;
+    margin:18px 0;
+    white-space:pre-wrap;
+    font-weight:600;
+  }
+
+  .heart {
+    display:inline-block;
+    transform-origin:center;
+    animation: heartBeat 1.2s ease-in-out infinite;
+    margin-left:8px;
+  }
+  @keyframes heartBeat {
+    0%,100%{ transform: scale(1) }
+    50%{ transform: scale(1.16) }
+  }
+
+  .hearts {
+    pointer-events:none;
+    position:absolute; inset:0; z-index:0;
+    overflow:hidden;
+  }
+  .hearts .h {
+    position:absolute;
+    bottom:-60px;
+    font-size:26px;
+    opacity:0.95;
+    transform: translateY(0) scale(1);
+    animation: floatUp linear forwards;
+    filter: drop-shadow(0 6px 10px rgba(0,0,0,0.45));
+  }
+  @keyframes floatUp {
+    0% { transform: translateY(0) scale(0.9); opacity:0; }
+    10% { opacity: 1; }
+    100% { transform: translateY(-140vh) scale(1.1); opacity:0; }
+  }
+
+  .btn {
+    margin-top:14px;
+    display:inline-flex;
+    gap:10px;
+    align-items:center;
+    background:linear-gradient(90deg,var(--accent), #ff9bb3);
+    border:none;
+    color:#111;
+    padding:10px 16px;
+    border-radius:999px;
+    font-weight:700;
+    cursor:pointer;
+    box-shadow:0 6px 18px rgba(255,107,129,0.16);
+  }
+</style>
+</head>
+<body>
+
+<div class="bg-anim" aria-hidden="true"></div>
+
+<div class="card">
+  <h1>For Arjun 💌</h1>
+  <div id="message" class="message"></div>
+  <button id="reveal" class="btn">Reveal the Message</button>
+  <div class="hearts" id="hearts"></div>
+</div>
+
+<script>
+  const fullMessage = `“If I had to choose again,\nI’d still choose you…\nA thousand times over 🌹💕”\n\nWith love, Garima\n\nI love you so much ❤️😘💞`;
+  const messageEl = document.getElementById('message');
+  const revealBtn = document.getElementById('reveal');
+  const heartsContainer = document.getElementById('hearts');
+
+  function typeMessage(text, speed = 38) {
+    messageEl.textContent = "";
+    let i = 0;
+    const t = setInterval(() => {
+      messageEl.textContent += text[i];
+      i++;
+      if (i >= text.length) {
+        clearInterval(t);
+        const heart = document.createElement('span');
+        heart.className = "heart";
+        heart.innerHTML = "💖";
+        messageEl.appendChild(heart);
+      }
+    }, speed);
+  }
+
+  function spawnHearts(count = 14) {
+    heartsContainer.innerHTML = "";
+    for (let i=0;i<count;i++){
+      const el = document.createElement('div');
+      el.className = 'h';
+      const emojis = ["💖","💘","❤️","💕","💞"];
+      el.textContent = emojis[Math.floor(Math.random()*emojis.length)];
+      el.style.left = Math.random() * 100 + "%";
+      el.style.fontSize = (16 + Math.random()*28) + "px";
+      el.style.opacity = 0.8 + Math.random()*0.2;
+      const dur = 6 + Math.random()*6;
+      el.style.animationDuration = dur + "s";
+      el.style.animationDelay = (Math.random()*1.5) + "s";
+      heartsContainer.appendChild(el);
+      setTimeout(() => { el.remove(); }, (dur+1.5)*1000);
+    }
+  }
+
+  function reveal() {
+    typeMessage(fullMessage);
+    spawnHearts(18);
+  }
+
+  revealBtn.addEventListener('click', reveal);
+</script>
+</body>
+</html>
